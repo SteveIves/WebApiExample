@@ -21,7 +21,6 @@ namespace WebServer
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             var dataFolder = Server.MapPath("~") + "\\..\\DATA";
-
             WebApiServicesConfig.Configure(dataFolder);
 
         }
