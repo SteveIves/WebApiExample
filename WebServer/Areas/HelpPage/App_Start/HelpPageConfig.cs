@@ -12,6 +12,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
+using WebApiServices.Models;
 #if Handle_PageResultOfT
 using System.Web.Http.OData;
 #endif
@@ -34,7 +35,7 @@ namespace WebServer.Areas.HelpPage
         public static void Register(HttpConfiguration config)
         {
             //// Uncomment the following to use the documentation from XML documentation file.
-            //config.SetDocumentationProvider(new XmlDocumentationProvider(HttpContext.Current.Server.MapPath("~/App_Data/XmlDocument.xml")));
+            config.SetDocumentationProvider(new XmlDocumentationProvider(HttpContext.Current.Server.MapPath("~/App_Data/WebApiServices.xml")));
 
             //// Uncomment the following to use "sample string" as the sample for all actions that have string as the body parameter or return type.
             //// Also, the string arrays will be used for IEnumerable<string>. The sample objects will be serialized into different media type 
@@ -78,6 +79,17 @@ namespace WebServer.Areas.HelpPage
             //// Uncomment the following to correct the sample response when the action returns an HttpResponseMessage with ObjectContent<string>.
             //// The sample will be generated as if the controller named "Values" and action named "Post" were returning a string.
             //config.SetActualResponseType(typeof(string), "Values", "Post");
+ 
+            config.SetActualResponseType(typeof(List<Department>), "Department", "GetAll");
+            config.SetActualResponseType(typeof(Department), "Department", "Get");
+            config.SetActualResponseType(typeof(List<Department>), "Department", "GetByMANAGER");
+            config.SetActualResponseType(typeof(List<Employee>), "Employee", "GetAll");
+            config.SetActualResponseType(typeof(Employee), "Employee", "Get");
+            config.SetActualResponseType(typeof(List<Employee>), "Employee", "GetByDEPARTMENT");
+            config.SetActualResponseType(typeof(List<Employee>), "Employee", "GetByLAST_NAME");
+            config.SetActualResponseType(typeof(List<Employee>), "Employee", "GetBySTATE");
+            config.SetActualResponseType(typeof(List<Employee>), "Employee", "GetByZIP");
+            config.SetActualResponseType(typeof(List<Employee>), "Employee", "GetBornBeforeYear");
         }
 
 #if Handle_PageResultOfT

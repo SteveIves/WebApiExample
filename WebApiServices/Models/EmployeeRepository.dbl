@@ -1,0 +1,264 @@
+import System.Collections.Generic
+import Synergex.SynergyDE.Select
+
+namespace WebApiServices.Models
+
+    ;;; <summary>
+    ;;; Data repository for the Employee master file (DAT:employee.ism)
+    ;;; </summary>
+    public partial class EmployeeRepository implements IEmployeeRepository
+
+        private const fileSpec, string, "DAT:employee.ism"
+
+        ;;; <summary>
+        ;;; Read all records.
+        ;;; </summary>
+        ;;; <param name="results">Returned collection of records.</param>
+        ;;; <returns>RepositoryResult.Success or RepositoryResult.NotFound</returns>
+        public method ReadAll, RepositoryResult
+            required out results, @List<Employee>
+        proc
+            results = new List<Employee>()
+            data employeeRec, strEmployee
+            foreach employeeRec in new Select(new From(fileSpec,employeeRec))
+                results.Add(new Employee(employeeRec))
+            mreturn results.Count > 0 ? RepositoryResult.Success : RepositoryResult.NotFound
+        endmethod
+
+        ;;; <summary>
+        ;;; Read a specific record by primary key.
+        ;;; </summary>
+        ;;; <param name="aId">Employee ID</param>
+        ;;; <param name="aEmployee">Returned data object.</param>
+        ;;; <returns>RepositoryResult.Success or RepositoryResult.NotFound</returns>
+        public method Read, RepositoryResult
+            required in aId, int
+            required out aEmployee, @Employee
+        proc
+            data employeeRec, strEmployee
+            foreach employeeRec in new Select(new From(fileSpec,employeeRec),(Where)((employeeRec.id==aId)))
+            begin
+                aEmployee = new Employee(employeeRec)
+                mreturn RepositoryResult.Success
+            end
+            mreturn RepositoryResult.NotFound
+        endmethod
+        
+        ;;; <summary>
+        ;;; Retrieve all employees by DEPARTMENT.
+        ;;; </summary>
+        ;;; <param name="aDepartment">Employee's department ID.</param>
+        ;;; <param name="results">Returned collection of records.</param>
+        ;;; <returns>RepositoryResult.Success or RepositoryResult.NotFound</returns>
+        public method ReadByDEPARTMENT, RepositoryResult
+            required in  aDepartment, String
+            required out results, @List<Employee>
+        proc
+            results = new List<Employee>()
+            data employeeRec, strEmployee
+            foreach employeeRec in new Select(new From(fileSpec,employeeRec),(NoCaseWhere)((employeeRec.DEPARTMENT==aDepartment)))
+                results.Add(new Employee(employeeRec))
+            mreturn results.Count > 0 ? RepositoryResult.Success : RepositoryResult.NotFound
+        endmethod
+
+        ;;; <summary>
+        ;;; Retrieve all employees by LAST_NAME.
+        ;;; </summary>
+        ;;; <param name="aLastName">Last name.</param>
+        ;;; <param name="results">Returned collection of records.</param>
+        ;;; <returns>RepositoryResult.Success or RepositoryResult.NotFound</returns>
+        public method ReadByLAST_NAME, RepositoryResult
+            required in  aLastName, String
+            required out results, @List<Employee>
+        proc
+            results = new List<Employee>()
+            data employeeRec, strEmployee
+            foreach employeeRec in new Select(new From(fileSpec,employeeRec),(NoCaseWhere)((employeeRec.LAST_NAME==aLastName)))
+                results.Add(new Employee(employeeRec))
+            mreturn results.Count > 0 ? RepositoryResult.Success : RepositoryResult.NotFound
+        endmethod
+
+        ;;; <summary>
+        ;;; Retrieve all employees by STATE.
+        ;;; </summary>
+        ;;; <param name="aState">State.</param>
+        ;;; <param name="results">Returned collection of records.</param>
+        ;;; <returns>RepositoryResult.Success or RepositoryResult.NotFound</returns>
+        public method ReadBySTATE, RepositoryResult
+            required in  aState, String
+            required out results, @List<Employee>
+        proc
+            results = new List<Employee>()
+            data employeeRec, strEmployee
+            foreach employeeRec in new Select(new From(fileSpec,employeeRec),(NoCaseWhere)((employeeRec.STATE==aState)))
+                results.Add(new Employee(employeeRec))
+            mreturn results.Count > 0 ? RepositoryResult.Success : RepositoryResult.NotFound
+        endmethod
+
+        ;;; <summary>
+        ;;; Retrieve all employees by ZIP.
+        ;;; </summary>
+        ;;; <param name="aZip">Zip code.</param>
+        ;;; <param name="results">Returned collection of records.</param>
+        ;;; <returns>RepositoryResult.Success or RepositoryResult.NotFound</returns>
+        public method ReadByZIP, RepositoryResult
+            required in  aZip, int
+            required out results, @List<Employee>
+        proc
+            results = new List<Employee>()
+            data employeeRec, strEmployee
+            foreach employeeRec in new Select(new From(fileSpec,employeeRec),(NoCaseWhere)((employeeRec.ZIP==aZip)))
+                results.Add(new Employee(employeeRec))
+            mreturn results.Count > 0 ? RepositoryResult.Success : RepositoryResult.NotFound
+        endmethod
+
+        ;;; <summary>
+        ;;; Create a new record.
+        ;;; </summary>
+        ;;; <param name="employeeObj">Employee master.</param>
+        ;;; <returns>RepositoryResult.Success, RepositoryResult.Exists or RepositoryResult.DuplicateKey</returns>
+        public method Create, RepositoryResult
+            required in employeeObj, @Employee
+        proc
+            data response, RepositoryResult
+            data employeeRec, strEmployee, employeeObj.ToRecord()
+            data chn, i4
+
+            ;;Open the file
+            open(chn=0,U:I,fileSpec)
+
+            ;;Check the record doesn't already exist
+            try
+            begin
+                data tmpRec, strEmployee
+                read(chn,tmpRec,%keyval(chn,employeeRec,0),LOCK:Q_NO_LOCK)
+                response = RepositoryResult.Exists
+            end
+            catch (e, @KeyNotSameException)
+            begin
+                nop
+            end
+            catch (e, @EndOfFileException)
+            begin
+                nop
+            end
+            endtry
+
+            ;;Create the new record
+            if (response != RepositoryResult.Exists)
+            begin
+                try
+                begin
+                    store(chn,employeeRec)
+                    response = RepositoryResult.Success
+                end
+                catch (e, @DuplicateException)
+                begin
+                    response = RepositoryResult.DuplicateKey
+                end
+                endtry
+            end
+
+            ;;Close the file
+            close chn
+
+            mreturn response
+
+        endmethod
+
+        ;;; <summary>
+        ;;; Update an existing record.
+        ;;; </summary>
+        ;;; <param name="employeeObj">Employee master.</param>
+        ;;; <returns>RepositoryResult.Success, RepositoryResult.NotFound, RepositoryResult.DuplicateKey or RepositoryResult.KeyChange</returns>
+        public method Update, RepositoryResult
+            required in employeeObj, @Employee
+        proc
+            data employeeRec, strEmployee, employeeObj.ToRecord()
+            data chn, i4
+            data response, RepositoryResult
+                
+            ;;Open the file
+            open(chn=0,U:I,fileSpec)
+
+            ;;Read and lock the employee record
+            try
+            begin
+                data tmpRec, strEmployee
+                read(chn,tmpRec,%keyval(chn,employeeRec,0))
+                try
+                begin
+                    write(chn,employeeRec)
+                    response = RepositoryResult.Success
+                end
+                catch (e, @DuplicateException)
+                begin
+                    response = RepositoryResult.DuplicateKey
+                end
+                catch (e, @KeyNotSameException)
+                begin
+                    response = RepositoryResult.KeyChange
+                end
+                endtry
+            end
+            catch (e, @KeyNotSameException)
+            begin
+                response = RepositoryResult.NotFound
+            end
+            catch (e, @EndOfFileException)
+            begin
+                response = RepositoryResult.NotFound
+            end
+            endtry
+
+            ;;Close the file
+            close chn
+
+            mreturn response
+
+        endmethod
+        
+        ;;; <summary>
+        ;;; Delete a record.
+        ;;; </summary>
+        ;;; <param name="aId">Employee ID</param>
+        ;;; <returns>RepositoryResult.Success or RepositoryResult.NotFound</returns>
+        public method Delete, RepositoryResult
+            required in aId, int
+        proc
+            data response, RepositoryResult
+            data chn, i4
+
+            ;;Open the file
+            open(chn=0,U:I,fileSpec)
+
+            ;;Put the key segments into employeeRec so we can use %keyval
+            data employeeRec, strEmployee
+            employeeRec.id = aId
+
+            try
+            begin
+                read(chn,employeeRec,%keyval(chn,employeeRec,0))
+                delete(chn)
+                response = RepositoryResult.Success
+            end
+            catch (e, @KeyNotSameException)
+            begin
+                response = RepositoryResult.NotFound
+            end
+            catch (e, @EndOfFileException)
+            begin
+                response = RepositoryResult.NotFound
+            end
+            endtry
+
+            ;;Close the file
+            close chn
+
+            mreturn response
+
+        endmethod
+        
+    endclass
+
+endnamespace

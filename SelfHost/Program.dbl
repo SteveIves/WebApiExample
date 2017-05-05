@@ -1,0 +1,26 @@
+import System
+import System.Collections.Generic
+import System.Text
+import Microsoft.Owin.Hosting
+
+namespace SelfHost
+
+    ;;; <summary>
+    ;;; The main entry point for the application.
+    ;;; </summary>
+    main
+
+    proc
+		data baseAddress, string, "http://localhost:8088/"
+		disposable data app = WebApp.Start<Startup>(baseAddress)
+
+		Console.WriteLine("")
+		Console.WriteLine("The server is listening at a base address of {0}",baseAddress)
+		Console.WriteLine("")
+		Console.Write("Press a key to stop the server: ")
+		Console.ReadKey()
+
+
+    endmain
+
+endnamespace

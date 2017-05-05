@@ -1,0 +1,26 @@
+import System
+import System.Collections.Generic
+import System.Text
+import Synergex.SynergyDE.Select
+
+namespace WebApiServices.Models
+
+	public partial class EmployeeRepository
+	
+		public method ReadBornBeforeYear, RepositoryResult
+			required in  year, int
+			required out results, @List<Employee>
+		proc
+			results = new List<Employee>()
+			data employeeRec, strEmployee
+			
+			foreach employeeRec in new Select(new From(fileSpec,employeeRec),(Where)(employeeRec.date_of_birth(1:4)<year))
+				results.Add(new Employee(employeeRec))
+
+			mreturn results.Count > 0 ? RepositoryResult.Success : RepositoryResult.NotFound
+
+		endmethod
+	
+	endclass
+
+endnamespace

@@ -1,0 +1,36 @@
+import System
+import System.Collections.Generic
+import System.Text
+import System.Net.Http
+import System.Web.Http
+import WebApiServices.Models
+import System.Net
+
+
+namespace WebApiServices.Controllers
+
+	public partial class EmployeeController
+	
+		{Route("bornbefore/{year}")}
+		;;; <summary>
+		;;; Retrieve all employees born before a specified year.
+		;;; </summary>
+		;;; <param name="year">Year born before.</param>
+		;;; <returns>Returns a collection of employees.</returns>
+		public method GetBornBeforeYear, @HttpResponseMessage
+			required in year, int
+		proc
+			data results, @List<Employee>
+			if (_employeeRepo.ReadBornBeforeYear(year,results) == RepositoryResult.NotFound)
+				mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+			data response = Request.CreateResponse(HttpStatusCode.OK,results)
+			response.Headers.Add("MatchingResults",results.Count.ToString())
+			mreturn response
+
+		endmethod
+
+
+	endclass
+
+endnamespace

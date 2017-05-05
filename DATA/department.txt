@@ -1,0 +1,8 @@
+ACCOUNTING     ACCOUNTING                                        001089
+HR             Human Resources                                   001089
+MAINTENANCE    Maintenance                                       000854
+MANAGEMENT     Executive Management                              003771
+MARKETING      Marketing                                         002312
+PRODUCTION     Production                                        000569
+QA                                                               000020
+SALES          Sales                                             002249

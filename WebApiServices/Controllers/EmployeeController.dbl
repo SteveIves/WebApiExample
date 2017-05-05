@@ -1,0 +1,193 @@
+import System
+import System.Collections.Generic
+import System.ComponentModel
+import System.Globalization
+import System.Linq
+import System.Net
+import System.Net.Http
+import System.Web.Http
+import System.ComponentModel.DataAnnotations
+import WebApiServices.Models
+
+namespace WebApiServices.Controllers
+
+    {RoutePrefix("api/employee")}
+    ;;; <summary>
+    ;;; A Web API Controller exposing CRUD functionality for the Employee master.
+    ;;; </summary>
+    public partial class EmployeeController extends ApiController
+
+        private _employeeRepo, @IEmployeeRepository
+
+        public method EmployeeController
+			required in injectedEmployeeRepo, @IEmployeeRepository
+        proc
+            _employeeRepo = injectedEmployeeRepo
+        endmethod
+
+        {Route("")}
+        ;;; <summary>
+        ;;; Retrieve all employees.
+        ;;; </summary>
+        ;;; <returns>A collection of all employees.</returns>
+        public method GetAll, @HttpResponseMessage
+        proc
+            data results = new List<Employee>()
+            if (_employeeRepo.ReadAll(results) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.OK,results)
+
+        endmethod
+
+        {Route("{aId}")}
+        ;;; <summary>
+        ;;; Retrieve a specific employee by ID.
+        ;;; </summary>
+        ;;; <param name="aId">Employee ID.</param>
+        ;;; <returns>Returns a Employee object.</returns>
+        public method Get, @HttpResponseMessage
+            required in aId, int
+        proc
+            data employeeObj, @Employee
+            if (_employeeRepo.Read(aId,employeeObj) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.OK,employeeObj)
+
+        endmethod
+
+        {Route("department/{aDepartment}")}
+        ;;; <summary>
+        ;;; Retrieve all employees by DEPARTMENT.
+        ;;; </summary>
+        ;;; <param name="aDepartment">Employee's department ID.</param>
+        ;;; <returns>Returns employees by DEPARTMENT.</returns>
+        public method GetByDEPARTMENT, @HttpResponseMessage
+            required in aDepartment, String
+        proc
+            data results, @List<Employee>
+            if (_employeeRepo.ReadByDEPARTMENT(aDepartment,results) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.OK,results)
+
+        endmethod
+
+        {Route("last_name/{aLastName}")}
+        ;;; <summary>
+        ;;; Retrieve all employees by LAST_NAME.
+        ;;; </summary>
+        ;;; <param name="aLastName">Last name.</param>
+        ;;; <returns>Returns employees by LAST_NAME.</returns>
+        public method GetByLAST_NAME, @HttpResponseMessage
+            required in aLastName, String
+        proc
+            data results, @List<Employee>
+            if (_employeeRepo.ReadByLAST_NAME(aLastName,results) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.OK,results)
+
+        endmethod
+
+        {Route("state/{aState}")}
+        ;;; <summary>
+        ;;; Retrieve all employees by STATE.
+        ;;; </summary>
+        ;;; <param name="aState">State.</param>
+        ;;; <returns>Returns employees by STATE.</returns>
+        public method GetBySTATE, @HttpResponseMessage
+            required in aState, String
+        proc
+            data results, @List<Employee>
+            if (_employeeRepo.ReadBySTATE(aState,results) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.OK,results)
+
+        endmethod
+
+        {Route("zip/{aZip}")}
+        ;;; <summary>
+        ;;; Retrieve all employees by ZIP.
+        ;;; </summary>
+        ;;; <param name="aZip">Zip code.</param>
+        ;;; <returns>Returns employees by ZIP.</returns>
+        public method GetByZIP, @HttpResponseMessage
+            required in aZip, int
+        proc
+            data results, @List<Employee>
+            if (_employeeRepo.ReadByZIP(aZip,results) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.OK,results)
+
+        endmethod
+
+        {Route("")}
+        ;;; <summary>
+        ;;; Create a new employee.
+        ;;; </summary>
+        ;;; <param name="employeeObj">Employee to create.</param>
+        ;;; <returns>Returns an HttpResponseMessage indicating the status of the operation and, on success, containing a URL that can be used to retrieve the Employee object.</returns>
+        public method Post, @HttpResponseMessage
+            {FromBody()}
+            required in employeeObj, @Employee
+        proc
+            if (_employeeRepo.Create(employeeObj) == RepositoryResult.Exists)
+                mreturn Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Already exists!")
+
+            data response = Request.CreateResponse(HttpStatusCode.Created)
+            response.Headers.Location = new Uri(String.Format("{0}/{1}",Request.RequestUri,employeeObj.Id))
+            mreturn response
+
+        endmethod
+
+        {Route("{aId}")}
+        ;;; <summary>
+        ;;; Update an existing employee.
+        ;;; </summary>
+        ;;; <param name="aId">Employee ID.</param>
+        ;;; <param name="employeeObj">Employee to update.</param>
+        ;;; <returns>Returns an HttpResponseMessage indicating the status of the operation.</returns>
+        public method Put, @HttpResponseMessage
+            required in aId, int
+            {FromBody()}
+            required in employeeObj, @Employee
+        proc
+            ;; Move the parameter data into the data object
+            employeeObj.Id = aId
+
+            using (_employeeRepo.Update(employeeObj)) select
+            (RepositoryResult.NotFound),
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+            (RepositoryResult.DuplicateKey),
+                mreturn Request.CreateErrorResponse(HttpStatusCode.BadRequest,"Invalid duplicate key value!")
+            (RepositoryResult.KeyChange),
+                mreturn Request.CreateErrorResponse(HttpStatusCode.BadRequest,"Invalid key value change!")
+            endusing
+
+            mreturn Request.CreateResponse(HttpStatusCode.NoContent)
+
+        endmethod
+        
+        {Route("{aId}")}
+        ;;; <summary>
+        ;;; Delete a employee.
+        ;;; </summary>
+        ;;; <param name="aId">Employee ID.</param>
+        ;;; <returns>Returns an HttpResponseMessage indicating the status of the operation.</returns>
+        public method Delete, @HttpResponseMessage
+            required in aId, int
+        proc
+            if (_employeeRepo.Delete(aId) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.NoContent)
+
+        endmethod
+
+    endclass
+
+endnamespace

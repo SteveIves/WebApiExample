@@ -1,0 +1,39 @@
+import System
+import System.Collections.Generic
+import System.Text
+import Owin
+import System.Web.Http
+import WebApiServices
+import WebApiServices.Filters
+
+
+namespace SelfHost
+
+	public class Startup
+	
+		public method Configuration, void
+			required in appBuilder, @IappBuilder
+			endparams
+		proc
+			;;  Configure Web API for self-host.
+			data config = new HttpConfiguration()
+
+			;;Implement a Unity IoC container
+			config.DependencyResolver = WebApiServicesConfig.GetUnityResolver()
+
+			;;Implement global model state validation
+			config.Filters.Add(new ValidateModelAttribute())
+
+			;;Enable attribute-based routes
+			config.MapHttpAttributeRoutes()
+
+
+			config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", RouteParameter.Optional)
+
+			appBuilder.UseWebApi(config)
+
+		endmethod
+
+	endclass
+
+endnamespace

@@ -1,0 +1,142 @@
+import System
+import System.Collections.Generic
+import System.ComponentModel
+import System.Globalization
+import System.Linq
+import System.Net
+import System.Net.Http
+import System.Web.Http
+import System.ComponentModel.DataAnnotations
+import WebApiServices.Models
+
+namespace WebApiServices.Controllers
+
+    {RoutePrefix("api/department")}
+    ;;; <summary>
+    ;;; A Web API Controller exposing CRUD functionality for the Department master.
+    ;;; </summary>
+    public partial class DepartmentController extends ApiController
+
+        private _departmentRepo, @IDepartmentRepository
+
+        public method DepartmentController
+			required in injectedDepartmentRepo, @IDepartmentRepository
+        proc
+            _departmentRepo = injectedDepartmentRepo
+        endmethod
+
+        {Route("")}
+        ;;; <summary>
+        ;;; Retrieve all departments.
+        ;;; </summary>
+        ;;; <returns>A collection of all departments.</returns>
+        public method GetAll, @HttpResponseMessage
+        proc
+            data results = new List<Department>()
+            if (_departmentRepo.ReadAll(results) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.OK,results)
+
+        endmethod
+
+        {Route("{aId}")}
+        ;;; <summary>
+        ;;; Retrieve a specific department by ID.
+        ;;; </summary>
+        ;;; <param name="aId">Department ID.</param>
+        ;;; <returns>Returns a Department object.</returns>
+        public method Get, @HttpResponseMessage
+            required in aId, String
+        proc
+            data departmentObj, @Department
+            if (_departmentRepo.Read(aId,departmentObj) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.OK,departmentObj)
+
+        endmethod
+
+        {Route("manager/{aManager}")}
+        ;;; <summary>
+        ;;; Retrieve all departments by MANAGER.
+        ;;; </summary>
+        ;;; <param name="aManager">Department manager.</param>
+        ;;; <returns>Returns departments by MANAGER.</returns>
+        public method GetByMANAGER, @HttpResponseMessage
+            required in aManager, int
+        proc
+            data results, @List<Department>
+            if (_departmentRepo.ReadByMANAGER(aManager,results) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.OK,results)
+
+        endmethod
+
+        {Route("")}
+        ;;; <summary>
+        ;;; Create a new department.
+        ;;; </summary>
+        ;;; <param name="departmentObj">Department to create.</param>
+        ;;; <returns>Returns an HttpResponseMessage indicating the status of the operation and, on success, containing a URL that can be used to retrieve the Department object.</returns>
+        public method Post, @HttpResponseMessage
+            {FromBody()}
+            required in departmentObj, @Department
+        proc
+            if (_departmentRepo.Create(departmentObj) == RepositoryResult.Exists)
+                mreturn Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Already exists!")
+
+            data response = Request.CreateResponse(HttpStatusCode.Created)
+            response.Headers.Location = new Uri(String.Format("{0}/{1}",Request.RequestUri,departmentObj.Id))
+            mreturn response
+
+        endmethod
+
+        {Route("{aId}")}
+        ;;; <summary>
+        ;;; Update an existing department.
+        ;;; </summary>
+        ;;; <param name="aId">Department ID.</param>
+        ;;; <param name="departmentObj">Department to update.</param>
+        ;;; <returns>Returns an HttpResponseMessage indicating the status of the operation.</returns>
+        public method Put, @HttpResponseMessage
+            required in aId, String
+            {FromBody()}
+            required in departmentObj, @Department
+        proc
+            ;; Move the parameter data into the data object
+            departmentObj.Id = aId
+
+            using (_departmentRepo.Update(departmentObj)) select
+            (RepositoryResult.NotFound),
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+            (RepositoryResult.DuplicateKey),
+                mreturn Request.CreateErrorResponse(HttpStatusCode.BadRequest,"Invalid duplicate key value!")
+            (RepositoryResult.KeyChange),
+                mreturn Request.CreateErrorResponse(HttpStatusCode.BadRequest,"Invalid key value change!")
+            endusing
+
+            mreturn Request.CreateResponse(HttpStatusCode.NoContent)
+
+        endmethod
+        
+        {Route("{aId}")}
+        ;;; <summary>
+        ;;; Delete a department.
+        ;;; </summary>
+        ;;; <param name="aId">Department ID.</param>
+        ;;; <returns>Returns an HttpResponseMessage indicating the status of the operation.</returns>
+        public method Delete, @HttpResponseMessage
+            required in aId, String
+        proc
+            if (_departmentRepo.Delete(aId) == RepositoryResult.NotFound)
+                mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+
+            mreturn Request.CreateResponse(HttpStatusCode.NoContent)
+
+        endmethod
+
+    endclass
+
+endnamespace

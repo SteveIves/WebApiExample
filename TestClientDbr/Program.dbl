@@ -1,0 +1,40 @@
+
+;;; <summary>
+;;; The main entry point for the application.
+;;; </summary>
+main
+	.include "DBLDIR:synxml.def"
+
+	record
+		tt,             i4, 0
+		httpError,      i4
+		response,       string
+		errorText,      string
+		sendHeaders,    [#]string
+		receiveHeaders, [#]string
+	endrecord
+
+proc
+	open(tt,i,"tt:")
+
+	sendHeaders = new string[2]
+	sendHeaders[1] = "Host: localhost"
+	sendHeaders[2] = "Accept: application/xml"
+
+	httpError = %http_get("http://localhost/WebServer/api/department/manager/1089",2,response,errorText,sendHeaders,receiveHeaders,"http.log",,,,,HTTP_RELURI,"1.1")
+
+	if (httpError) then
+	begin
+		writes(tt,errorText)
+	end
+	else
+	begin
+		writes(tt,response)
+	end
+
+	writes(tt,"")
+	display(tt,"Press a key to terminate: ")
+	accept(tt,httpError)
+	close tt
+
+endmain

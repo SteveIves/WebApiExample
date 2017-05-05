@@ -1,0 +1,17 @@
+
+import System
+import System.Collections.Generic
+import System.Text
+
+namespace WebApiServices.Models
+
+	partial interface IEmployeeRepository
+	
+		method ReadBornBeforeYear, RepositoryResult
+			required in  year, int
+			required out results, @List<Employee>
+		endmethod
+
+	endinterface
+	
+endnamespace

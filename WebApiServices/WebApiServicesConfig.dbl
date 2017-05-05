@@ -1,0 +1,30 @@
+import System
+import System.Collections.Generic
+import System.Text
+import Microsoft.Practices.Unity
+import WebApiServices.Models
+
+
+namespace WebApiServices
+
+	public class WebApiServicesConfig
+	
+		public static method Configure, void
+			endparams
+		proc
+			data status, i4
+			xcall setlog("DAT","C:\DEV\DEMOS\WebApiExample\DATA",status)
+		endmethod
+
+		public static method GetUnityResolver, @UnityResolver
+		proc
+			data container = new UnityContainer()
+			container.RegisterType<IDepartmentRepository, DepartmentRepository>()
+			container.RegisterType<IEmployeeRepository, EmployeeRepository>()
+			mreturn new UnityResolver(container)
+		endmethod
+
+
+	endclass
+
+endnamespace

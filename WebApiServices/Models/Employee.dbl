@@ -1,0 +1,155 @@
+namespace WebApiServices.Models
+
+    .include "EMPLOYEE" repository, structure="strEmployee", end
+
+    ;;; <summary>
+    ;;; Employee master
+    ;;; </summary>
+    public partial class Employee extends DataClassBase
+
+        ;;; <summary>
+        ;;; Construct an empty Employee object
+        ;;; </summary>
+        public method Employee
+        proc
+        endmethod
+
+        ;;; <summary>
+        ;;; Construct a Employee object from a Employee master record
+        ;;; </summary>
+        public method Employee
+            required in aEmployee, strEmployee
+        proc
+            this.Id = aEmployee.id
+            this.FirstName = %atrim(aEmployee.first_name)
+            this.LastName = %atrim(aEmployee.last_name)
+            this.Department = %atrim(aEmployee.department)
+            this.HireDate = yyyymmddToNullableDateTime(aEmployee.hire_date)
+            this.PhoneWork = %atrim(aEmployee.phone_work)
+            this.PhoneHome = %atrim(aEmployee.phone_home)
+            this.PhoneCell = %atrim(aEmployee.phone_cell)
+            this.Paid = aEmployee.paid
+            this.PhoneHomeOk = aEmployee.phone_home_ok
+            this.DateOfBirth = yyyymmddToNullableDateTime(aEmployee.date_of_birth)
+            this.HireTime = hhmmToDateTime(aEmployee.hire_time)
+            this.Email = %atrim(aEmployee.email)
+            this.Street = %atrim(aEmployee.street)
+            this.City = %atrim(aEmployee.city)
+            this.State = %atrim(aEmployee.state)
+            this.Zip = aEmployee.zip
+        endmethod
+
+        ;;; <summary>
+        ;;; Employee ID
+        ;;; </summary>
+        public readwrite property Id, int
+
+        ;;; <summary>
+        ;;; First name
+        ;;; </summary>
+        public readwrite property FirstName, String
+
+        ;;; <summary>
+        ;;; Last name
+        ;;; </summary>
+        public readwrite property LastName, String
+
+        ;;; <summary>
+        ;;; Employee's department ID
+        ;;; </summary>
+        public readwrite property Department, String
+
+        ;;; <summary>
+        ;;; Date hired
+        ;;; </summary>
+        public readwrite property HireDate, @Nullable<DateTime>
+
+        ;;; <summary>
+        ;;; Work phone number
+        ;;; </summary>
+        public readwrite property PhoneWork, String
+
+        ;;; <summary>
+        ;;; Home phone number
+        ;;; </summary>
+        public readwrite property PhoneHome, String
+
+        ;;; <summary>
+        ;;; Cell phone number
+        ;;; </summary>
+        public readwrite property PhoneCell, String
+
+        ;;; <summary>
+        ;;; Employee pay method
+        ;;; </summary>
+        public readwrite property Paid, int
+
+        ;;; <summary>
+        ;;; OK to call at home
+        ;;; </summary>
+        public readwrite property PhoneHomeOk, int
+
+        ;;; <summary>
+        ;;; Date of birth
+        ;;; </summary>
+        public readwrite property DateOfBirth, @Nullable<DateTime>
+
+        ;;; <summary>
+        ;;; Hire time
+        ;;; </summary>
+        public readwrite property HireTime, DateTime
+
+        ;;; <summary>
+        ;;; Email address
+        ;;; </summary>
+        public readwrite property Email, String
+
+        ;;; <summary>
+        ;;; Street address
+        ;;; </summary>
+        public readwrite property Street, String
+
+        ;;; <summary>
+        ;;; City
+        ;;; </summary>
+        public readwrite property City, String
+
+        ;;; <summary>
+        ;;; State
+        ;;; </summary>
+        public readwrite property State, String
+
+        ;;; <summary>
+        ;;; Zip code
+        ;;; </summary>
+        public readwrite property Zip, int
+
+        ;;; <summary>
+        ;;; Return the data as a Employee master record
+        ;;; </summary>
+        public method ToRecord, strEmployee
+        proc
+            data employeeRec, strEmployee
+            employeeRec.id = this.Id
+            employeeRec.first_name = this.FirstName
+            employeeRec.last_name = this.LastName
+            employeeRec.department = this.Department
+            employeeRec.hire_date = nullableDateTimeToYYYYMMDD(this.HireDate)
+            employeeRec.phone_work = this.PhoneWork
+            employeeRec.phone_home = this.PhoneHome
+            employeeRec.phone_cell = this.PhoneCell
+            employeeRec.paid = this.Paid
+            employeeRec.phone_home_ok = this.PhoneHomeOk
+            employeeRec.date_of_birth = nullableDateTimeToYYYYMMDD(this.DateOfBirth)
+            employeeRec.hire_time = dateTimeToHHMM(this.HireTime)
+            employeeRec.email = this.Email
+            employeeRec.street = this.Street
+            employeeRec.city = this.City
+            employeeRec.state = this.State
+            employeeRec.zip = this.Zip
+            mreturn employeeRec
+        endmethod
+
+    endclass
+
+endnamespace

@@ -1,0 +1,57 @@
+namespace WebApiServices.Models
+
+    .include "DEPARTMENT" repository, structure="strDepartment", end
+
+    ;;; <summary>
+    ;;; Department master
+    ;;; </summary>
+    public partial class Department extends DataClassBase
+
+        ;;; <summary>
+        ;;; Construct an empty Department object
+        ;;; </summary>
+        public method Department
+        proc
+        endmethod
+
+        ;;; <summary>
+        ;;; Construct a Department object from a Department master record
+        ;;; </summary>
+        public method Department
+            required in aDepartment, strDepartment
+        proc
+            this.Id = %atrim(aDepartment.id)
+            this.Name = %atrim(aDepartment.name)
+            this.Manager = aDepartment.manager
+        endmethod
+
+        ;;; <summary>
+        ;;; Department ID
+        ;;; </summary>
+        public readwrite property Id, String
+
+        ;;; <summary>
+        ;;; Department name
+        ;;; </summary>
+        public readwrite property Name, String
+
+        ;;; <summary>
+        ;;; Department manager
+        ;;; </summary>
+        public readwrite property Manager, int
+
+        ;;; <summary>
+        ;;; Return the data as a Department master record
+        ;;; </summary>
+        public method ToRecord, strDepartment
+        proc
+            data departmentRec, strDepartment
+            departmentRec.id = this.Id
+            departmentRec.name = this.Name
+            departmentRec.manager = this.Manager
+            mreturn departmentRec
+        endmethod
+
+    endclass
+
+endnamespace

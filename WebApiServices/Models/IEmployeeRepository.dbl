@@ -1,0 +1,50 @@
+import System.Collections.Generic
+
+namespace WebApiServices.Models
+
+    partial interface IEmployeeRepository
+
+        method ReadAll, RepositoryResult
+            required out results, @List<Employee>
+        endmethod
+
+        method Read, RepositoryResult
+            required in aId, int
+            required out aEmployee, @Employee
+        endmethod
+        
+        method ReadByDEPARTMENT, RepositoryResult
+            required in  aDepartment, String
+            required out results, @List<Employee>
+        endmethod
+
+        method ReadByLAST_NAME, RepositoryResult
+            required in  aLastName, String
+            required out results, @List<Employee>
+        endmethod
+
+        method ReadBySTATE, RepositoryResult
+            required in  aState, String
+            required out results, @List<Employee>
+        endmethod
+
+        method ReadByZIP, RepositoryResult
+            required in  aZip, int
+            required out results, @List<Employee>
+        endmethod
+
+        method Create, RepositoryResult
+            required in employeeObj, @Employee
+        endmethod
+
+        method Update, RepositoryResult
+            required in employeeObj, @Employee
+        endmethod
+        
+        method Delete, RepositoryResult
+            required in aId, int
+        endmethod
+        
+    endinterface
+
+endnamespace

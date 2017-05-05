@@ -1,0 +1,82 @@
+
+import System
+import System.Collections.Generic
+import System.Linq
+import System.Net
+import System.Net.Http
+import System.Web.Http
+
+namespace WebApiServices.Controllers
+
+	;;;  <summary>
+	;;;  Exposes information about values
+	;;;  </summary>
+	public class ValuesController extends ApiController
+		;;  GET api/values
+
+		;;;  <summary>
+		;;;  Get all values
+		;;;  </summary>
+		;;;  <returns>Returns a collection of all values</returns>
+		public method Get, @IEnumerable<string>
+			endparams
+		proc
+			mreturn new string[#] {"value1", "value2"}
+		endmethod
+		;;  GET api/values/5
+
+		;;;  <summary>
+		;;;  Returns a specific value, by id
+		;;;  </summary>
+		;;;  <param name="id">The id of the value to get</param>
+		;;;  <returns>Returns a single value</returns>
+		public method Get, string
+			id, int 
+			endparams
+		proc
+			mreturn "value"
+		endmethod
+		;;  POST api/values
+
+		;;;  <summary>
+		;;;  Creates a new value
+		;;;  </summary>
+		;;;  <param name="value">The new value to create</param>
+		public method Post, void
+			{FromBody()}
+			value, string 
+			endparams
+		proc
+
+		endmethod
+		;;  PUT api/values/5
+
+		;;;  <summary>
+		;;;  Updates an existing value by id
+		;;;  </summary>
+		;;;  <param name="id">The id of the value to be updated</param>
+		;;;  <param name="value">The new value</param>
+		public method Put, void
+			id, int 
+			{FromBody()}
+			value, string 
+			endparams
+		proc
+
+		endmethod
+		;;  DELETE api/values/5
+
+		;;;  <summary>
+		;;;  Deletes a value by id
+		;;;  </summary>
+		;;;  <param name="id">The id of the value to be deleted</param>
+		public method Delete, void
+			id, int 
+			endparams
+		proc
+
+		endmethod
+	endclass
+
+endnamespace
+

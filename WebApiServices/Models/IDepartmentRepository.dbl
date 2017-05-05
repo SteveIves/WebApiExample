@@ -1,0 +1,35 @@
+import System.Collections.Generic
+
+namespace WebApiServices.Models
+
+    partial interface IDepartmentRepository
+
+        method ReadAll, RepositoryResult
+            required out results, @List<Department>
+        endmethod
+
+        method Read, RepositoryResult
+            required in aId, String
+            required out aDepartment, @Department
+        endmethod
+        
+        method ReadByMANAGER, RepositoryResult
+            required in  aManager, int
+            required out results, @List<Department>
+        endmethod
+
+        method Create, RepositoryResult
+            required in departmentObj, @Department
+        endmethod
+
+        method Update, RepositoryResult
+            required in departmentObj, @Department
+        endmethod
+        
+        method Delete, RepositoryResult
+            required in aId, String
+        endmethod
+        
+    endinterface
+
+endnamespace

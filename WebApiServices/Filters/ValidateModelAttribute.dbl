@@ -1,0 +1,23 @@
+import System
+import System.Collections.Generic
+import System.Text
+import System.Web.Http.Filters
+import System.Web.Http.Controllers
+import System.Net
+import System.Net.Http
+
+namespace WebApiServices.Filters
+
+	public class ValidateModelAttribute extends ActionFilterAttribute
+	
+		public override method OnActionExecuting, void
+			required in context, @HttpActionContext
+			endparams
+		proc
+			if (context.ModelState.IsValid == false)
+				context.Response = context.Request.CreateErrorResponse(HttpStatusCode.BadRequest, context.ModelState)
+		endmethod
+
+	endclass
+
+endnamespace

@@ -1,0 +1,110 @@
+import System
+import System.Collections.Generic
+import System.Linq
+import System.Text
+import System.Web.Http
+import WebApiServices.Models
+import System.Net
+import System.Net.Http
+
+
+namespace WebApiServices.Controllers
+
+	;;; <summary>
+	;;; Exposes actions relative to a collection of people.
+	;;; </summary>
+	public class PeopleController extends ApiController
+	
+		private static people, @List<Person>
+
+		public method PeopleController
+			endparams
+		proc
+			if (people == ^null)
+			begin
+				people = new List<Person>() { 
+				&	new Person() { ID=1, FirstName="John", LastName="Doe"},
+				&	new Person() { ID=2, FirstName="Jane", LastName="Doe"}
+				&	}
+			end
+		endmethod
+
+		;;; <summary>
+		;;; Get all people.
+		;;; </summary>
+		;;; <returns>A collection of all people.</returns>
+		public method Get, @IEnumerable<Person>
+			endparams
+		proc
+			mreturn people
+		endmethod
+
+		;;; <summary>
+		;;; Get a specific person by ID.
+		;;; </summary>
+		;;; <returns>A a specific person.</returns>
+		public method Get, @IHttpActionResult
+			required in id, int
+			endparams
+		proc
+			data p = people.FirstOrDefault(lambda (p) { p.Id == id }) 
+			if (p == ^null)
+				mreturn NotFound()
+			mreturn Ok(p)
+		endmethod
+
+		;;;  <summary>
+		;;;  Create a new person.
+		;;;  </summary>
+		;;;  <param name="newPerson">The person to be created. </param>
+		;;; <returns>HTTP 201 Created. Refer to the Location response header for the URI of the created person.</returns>
+		public method Post, @HttpResponseMessage
+			{FromBody}
+			required in newPerson, @Person
+			endparams
+		proc
+			newPerson.ID = (people.Count > 0) ? people.OrderByDescending(lambda(p) {p.Id}).First().Id + 1 : 1
+			people.Add(newPerson)
+			data response = Request.CreateResponse(HttpStatusCode.Created)
+			response.Headers.Location = new Uri(String.Format("{0}/{1}",Request.RequestUri,newPerson.ID))
+			mreturn response
+		endmethod
+
+		;;; <summary>
+		;;; Update a person.
+		;;; </summary>
+		;;; <param name="id">The ID of the person to update.</param>
+		;;; <param name="updatedPerson">The new person data to be saved.</param>
+		;;; <returns>HTTP 204 No Content on success or HTTP 404 Not Found.</returns>
+		public method Put, @HttpResponseMessage
+			required in id, int
+			{FromBody}
+			required in updatedPerson, @Person
+			endparams
+		proc
+			data existingPerson = people.FirstOrDefault(lambda (p) { p.id == id })
+			if (existingPerson == ^null)
+				mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+			updatedPerson.ID = id
+			people[people.IndexOf(existingPerson)] = updatedPerson
+			mreturn Request.CreateResponse(HttpStatusCode.NoContent)
+		endmethod
+
+		;;; <summary>
+		;;; Delete a person.
+		;;; </summary>
+		;;; <param name="id">The ID of the person to delete.</param>
+		public method Delete, @HttpResponseMessage
+			required in id, int 
+		proc
+			data personToDelete = people.FirstOrDefault(lambda (p) { p.Id == id })
+			if (personToDelete == ^null)
+				mreturn Request.CreateResponse(HttpStatusCode.NotFound)
+			people.Remove(personToDelete)
+			mreturn Request.CreateResponse(HttpStatusCode.NoContent)
+		endmethod
+
+
+	endclass
+
+endnamespace

@@ -1,0 +1,65 @@
+import WebApiServices.Models
+import System
+import System.Collections.Generic
+import System.Text
+import System.Threading.Tasks
+import System.Net.Http
+import Newtonsoft.Json
+import System.Net
+
+namespace TestClientNet
+
+    ;;; <summary>
+    ;;; The main entry point for the application.
+    ;;; </summary>
+    main
+
+    proc
+		data client = new EmployeeServiceClient()
+		data e, @Employee
+
+		;;Only do this in a console app!
+		data thetask = client.GetEmployeesInState("CA")
+		thetask.Wait()
+
+		foreach e in thetask.Result
+			Console.WriteLine("{0} {1} {2}", e.ID, e.FirstName, e.LastName)
+
+		Console.WriteLine("")
+		Console.Write("Press a key to terminate: ")
+		Console.ReadKey()
+
+    endmain
+
+	public class EmployeeServiceClient
+
+		private const baseUrl, string, "http://localhost/WebServer/api/employee/"
+
+		private async method doGetMultiple, @Task<List<Employee>>
+			required in url, string
+		proc
+			disposable data webclient = new HttpClient()
+			disposable data request = new HttpRequestMessage()
+			request.RequestUri = new Uri(String.Format("{0}{1}",baseUrl,url))
+			request.Method = HttpMethod.Get
+			disposable data response = await webclient.SendAsync(request)
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				mreturn new List<Employee>()
+
+			data json = await response.Content.ReadAsStringAsync()
+			mreturn JsonConvert.DeserializeObject<List<Employee>>(json)
+		endmethod
+
+		public async method GetEmployeesInState, @Task<List<Employee>>
+			required in state, string
+		proc
+			data url = String.Format("state/{0}",state)
+			mreturn await doGetMultiple(url)
+		endmethod
+
+	endclass
+
+
+
+endnamespace
