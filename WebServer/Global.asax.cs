@@ -20,7 +20,9 @@ namespace WebServer
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            WebApiServicesConfig.Configure();
+            var dataFolder = Server.MapPath("~") + "\\..\\DATA";
+
+            WebApiServicesConfig.Configure(dataFolder);
 
         }
     }

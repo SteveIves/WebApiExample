@@ -18,6 +18,4 @@ Basic setup instructions:
 1. Clone the repository to a local folder
 2. Open a command prompt and execute the setup.bat script to load data files and repository.
 3. Start Visual Studio as administrator and open the solution.
-4. In the WebApiServices project, edit WebApiServicesConfog.dbl and set the value of the DAT environment variable to an appropriate value for your system.
-5. In the properties of the WebServer project, go to the Web tab and click the Create Virtual Directory button.
-
+4. In the properties of the WebServer project, go to the Web tab and click the Create Virtual Directory button.
