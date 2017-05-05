@@ -1,0 +1,167 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Workshop Tests (People)",
+		"_postman_id": "0814a9ba-b9e3-3f11-4f20-d9376639bd47",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All People",
+			"request": {
+				"url": "{{BaseAddress}}api/people",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Acc",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Person 1",
+			"request": {
+				"url": "{{BaseAddress}}api/people/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Susan Doe",
+			"request": {
+				"url": "{{BaseAddress}}api/people",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"FirstName\": \"Susan\", \"LastName\": \"Doe\" }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Susan Becomes Simon",
+			"request": {
+				"url": "{{BaseAddress}}api/people/3",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"FirstName\": \"Simon\", \"LastName\": \"Doe\" }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Person 3",
+			"request": {
+				"url": "{{BaseAddress}}api/people/3",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get All People (XML)",
+			"request": {
+				"url": "{{BaseAddress}}api/people",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Susan Doe (XML)",
+			"request": {
+				"url": "{{BaseAddress}}api/people",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<Person xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://schemas.datacontract.org/2004/07/WebApiServices.Models\">\r\n  <FirstName>Susan</FirstName>\r\n  <LastName>Doe</LastName>\r\n</Person>\r\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Susan Doe (Bad Request)",
+			"request": {
+				"url": "{{BaseAddress}}api/people",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"FirstName\": \"Susan\", \"LastName\": \"Pneumonoultramicroscopicsilicovolcanoconiosis\" }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Susan Becomes Simon (Bad Request)",
+			"request": {
+				"url": "{{BaseAddress}}api/people/3",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"FirstName\": \"Simon\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,39 @@
+
+import System.Globalization
+import System.Windows.Data
+
+namespace TestClientWpf
+
+	public class EnumMatchToBooleanConverter implements IValueConverter
+
+		public method Convert, @Object
+			value, @Object 
+			targetType, @Type 
+			parameter, @Object 
+			culture, @CultureInfo 
+		proc
+			if ((value == ^null) || (parameter == ^null))
+				mreturn false
+			data checkValue, string, value.ToString()
+			data targetValue, string, parameter.ToString()
+			mreturn checkValue.Equals(targetValue, StringComparison.InvariantCultureIgnoreCase)
+		endmethod
+
+		public method ConvertBack, @Object
+			value, @Object 
+			targetType, @Type 
+			parameter, @Object 
+			culture, @CultureInfo 
+			endparams
+		proc
+			if ((value == ^null) || (parameter == ^null))
+				mreturn ^null
+			data useValue, boolean, (boolean)value
+			data targetValue, string, parameter.ToString()
+			if (useValue)
+				mreturn Enum.Parse(targetType, targetValue)
+			mreturn ^null
+		endmethod
+	endclass
+
+endnamespace

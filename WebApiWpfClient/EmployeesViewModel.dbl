@@ -1,0 +1,172 @@
+
+import System.Collections.ObjectModel
+import System.Windows.Input
+import System.Windows
+
+namespace TestClientWpf
+
+	public enum EmployeeSearchMode
+		All
+		LastName
+		State
+		ZipCode
+	endenum
+
+	public class EmployeesViewModel extends ViewModelBase
+	
+		public method EmployeesViewModel
+		proc
+			SearchMode = EmployeeSearchMode.All
+			_EmployeeServiceClient = new EmployeeServiceClient()
+		endmethod
+
+		private _SearchMode, EmployeeSearchMode
+
+		public property SearchMode, EmployeeSearchMode
+			method get
+			proc
+				mreturn _SearchMode
+			endmethod
+			method set
+			proc
+				_SearchMode = value
+				NotifyPropertyChanged("SearchMode")
+				SearchText = ""
+				SearchTextEnabled = (SearchMode!=EmployeeSearchMode.All)
+			endmethod
+		endproperty
+
+		private _SearchText, string
+
+		public property SearchText, string
+			method get
+			proc
+				mreturn _SearchText
+			endmethod
+			method set
+			proc
+				_SearchText = value
+				NotifyPropertyChanged("SearchText")
+			endmethod
+		endproperty
+
+		private _SearchTextEnabled, Boolean, False
+
+		public property SearchTextEnabled, Boolean
+			method get
+			proc
+				mreturn _SearchTextEnabled
+			endmethod
+			method set
+			proc
+				_SearchTextEnabled = value
+				NotifyPropertyChanged("SearchTextEnabled")
+			endmethod
+		endproperty
+
+		private _ResultsMessage, string, ""
+
+		public property ResultsMessage, string
+			method get
+			proc
+				mreturn _ResultsMessage
+			endmethod
+			method set
+			proc
+				_ResultsMessage = value
+				NotifyPropertyChanged("ResultsMessage")
+			endmethod
+		endproperty
+		
+		private _Employees, @ObservableCollection<Employee>
+
+		public property Employees, @ObservableCollection<Employee>
+			method get
+			proc
+				mreturn _Employees
+			endmethod
+			method set
+			proc
+				_Employees = value
+				NotifyPropertyChanged("Employees")
+				if (_Employees.Count>0)
+					SelectedEmployee = _Employees[0]
+			endmethod
+		endproperty
+
+		private _SelectedEmployee, @Employee
+
+		public property SelectedEmployee, @Employee
+			method get
+			proc
+				mreturn _SelectedEmployee
+			endmethod
+			method set
+			proc
+				_SelectedEmployee = value
+				NotifyPropertyChanged("SelectedEmployee")
+			endmethod
+		endproperty
+
+		private _EmployeeServiceClient, @EmployeeServiceClient
+
+		private _SearchCommand, @ICommand
+
+		public property SearchCommand, @ICommand
+			method get
+			proc
+				if (_SearchCommand == ^null)
+					_SearchCommand = new RelayCommand(doSearch)
+				mreturn _SearchCommand
+			endmethod
+		endproperty
+		
+		private async method doSearch, void
+			param, @Object
+		proc
+
+			Employees = new ObservableCollection<Employee>()
+
+			using SearchMode select
+
+			(EmployeeSearchMode.All),
+			begin
+				Employees = await _EmployeeServiceClient.GetAllEmployees()
+				ResultsMessage = String.Format("{0} matches",Employees.Count)
+			end
+
+			(EmployeeSearchMode.LastName),
+				if (String.IsNullOrWhiteSpace(SearchText)) then
+					ResultsMessage = "Search criteria required!"
+				else
+				begin
+					Employees = await _EmployeeServiceClient.GetEmployeesByLastName(SearchText)
+					ResultsMessage = String.Format("{0} matches",Employees.Count)
+				end
+
+			(EmployeeSearchMode.State),
+				if (String.IsNullOrWhiteSpace(SearchText)) then
+					ResultsMessage = "Search criteria required!"
+				else
+				begin
+					Employees = await _EmployeeServiceClient.GetEmployeesInState(SearchText)
+					ResultsMessage = String.Format("{0} matches",Employees.Count)
+				end
+
+			(EmployeeSearchMode.ZipCode),
+				if (String.IsNullOrWhiteSpace(SearchText)) then
+					ResultsMessage = "Search criteria required!"
+				else
+				begin
+					Employees = await _EmployeeServiceClient.GetEmployeesInZipCode(SearchText)
+					ResultsMessage = String.Format("{0} matches",Employees.Count)
+				end
+
+			endusing
+			
+		endmethod
+
+
+	endclass
+
+endnamespace

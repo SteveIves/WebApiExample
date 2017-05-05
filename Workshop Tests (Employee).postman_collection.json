@@ -1,0 +1,139 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Workshop Tests (Employee)",
+		"_postman_id": "a52229e9-ab17-bc45-bab3-e6a167829484",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Sales Employees",
+			"request": {
+				"url": "{{BaseAddress}}api/employee/department/SALES",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Employees",
+			"request": {
+				"url": "{{BaseAddress}}api/employee",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employee 100",
+			"request": {
+				"url": "{{BaseAddress}}api/employee/100",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Move Employee 100 to HR",
+			"request": {
+				"url": "{{BaseAddress}}api/employee/100",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"FirstName\": \"Leland\",\n  \"LastName\": \"Cantrell\",\n  \"Department\": \"HR\",\n  \"HireDate\": \"2042-10-03T00:00:00\",\n  \"PhoneWork\": \"(555) 461-2086\",\n  \"PhoneHome\": \"(555) 174-6468\",\n  \"PhoneCell\": \"(555) 355-6307\",\n  \"Paid\": 1,\n  \"PhoneHomeOk\": 1,\n  \"DateOfBirth\": \"1989-11-28T00:00:00\",\n  \"HireTime\": \"0001-01-01T09:00:00\",\n  \"Email\": \"leland.cantrell@yahoo.com\",\n  \"Street\": \"1689 Smith Place\",\n  \"City\": \"Vallejo\",\n  \"State\": \"CA\",\n  \"Zip\": 13424\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Move Employee 100 to Back to MANAGEMENT",
+			"request": {
+				"url": "{{BaseAddress}}api/employee/100",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"FirstName\": \"Leland\",\n  \"LastName\": \"Cantrell\",\n  \"Department\": \"MANAGEMENT\",\n  \"HireDate\": \"2042-10-03T00:00:00\",\n  \"PhoneWork\": \"(555) 461-2086\",\n  \"PhoneHome\": \"(555) 174-6468\",\n  \"PhoneCell\": \"(555) 355-6307\",\n  \"Paid\": 1,\n  \"PhoneHomeOk\": 1,\n  \"DateOfBirth\": \"1989-11-28T00:00:00\",\n  \"HireTime\": \"0001-01-01T09:00:00\",\n  \"Email\": \"leland.cantrell@yahoo.com\",\n  \"Street\": \"1689 Smith Place\",\n  \"City\": \"Vallejo\",\n  \"State\": \"CA\",\n  \"Zip\": 13424\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Production Employees",
+			"request": {
+				"url": "{{BaseAddress}}api/employee/department/PRODUCTION",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employees Last Name Humphrey",
+			"request": {
+				"url": "{{BaseAddress}}api/employee/last_name/Humphrey",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get California Employees",
+			"request": {
+				"url": "{{BaseAddress}}api/employee/state/CA",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employees in Zip 83383",
+			"request": {
+				"url": "{{BaseAddress}}api/employee/zip/83383",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Employees Born Before 1970",
+			"request": {
+				"url": "{{BaseAddress}}api/employee/bornbefore/1970",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

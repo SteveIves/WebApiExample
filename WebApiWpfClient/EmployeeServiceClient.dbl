@@ -1,0 +1,62 @@
+
+import System
+import System.Net
+import System.Net.Http
+import System.Collections.ObjectModel
+import System.Threading.Tasks
+import Newtonsoft.Json
+
+namespace TestClientWpf
+
+	public class EmployeeServiceClient
+
+		private const baseUrl, string, "http://localhost/WebServer/api/employee"
+
+		public async method GetAllEmployees, @Task<ObservableCollection<Employee>>
+		proc
+			mreturn await doGetMultiple(baseUrl)
+		endmethod
+
+		public async method GetEmployeesByLastName, @Task<ObservableCollection<Employee>>
+			required in name, string
+		proc
+			data url = String.Format("{0}/last_name/{1}",baseUrl,name)
+			mreturn await doGetMultiple(url)
+		endmethod
+	
+		public async method GetEmployeesInState, @Task<ObservableCollection<Employee>>
+			required in state, string
+		proc
+			data url = String.Format("{0}/state/{1}",baseUrl,state.ToUpper())
+			mreturn await doGetMultiple(url)
+		endmethod
+	
+		public async method GetEmployeesInZipCode, @Task<ObservableCollection<Employee>>
+			required in zip, string
+		proc
+			data url = String.Format("{0}/zip/{1}",baseUrl,zip)
+			mreturn await doGetMultiple(url)
+		endmethod
+	
+		private async method doGetMultiple, @Task<ObservableCollection<Employee>>
+			required in url, string
+		proc
+			disposable data webclient = new HttpClient()
+			disposable data request = new HttpRequestMessage()
+
+			request.RequestUri = new Uri(url)
+			request.Method = HttpMethod.Get
+
+			disposable data response = await webclient.SendAsync(request)
+
+			if (response.StatusCode == HttpStatusCode.NotFound)
+				mreturn new ObservableCollection<Employee>()
+
+			data json = await response.Content.ReadAsStringAsync()
+			mreturn JsonConvert.DeserializeObject<ObservableCollection<Employee>>(json)
+		endmethod
+
+	endclass
+
+
+endnamespace

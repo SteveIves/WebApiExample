@@ -1,0 +1,53 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Workshop Tests (ValuesController)",
+		"_postman_id": "10fa89e2-7ddc-e9e7-186b-4da95d60eb92",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Values",
+			"request": {
+				"url": "{{BaseAddress}}api/Values",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specific Value",
+			"request": {
+				"url": "{{BaseAddress}}api/Values/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Value",
+			"request": {
+				"url": "{{BaseAddress}}api/Values",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\"New string\""
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,29 @@
+import System
+import System.Collections.Generic
+import System.Text
+
+namespace TestClientWpf
+
+	public class Employee
+
+		public readwrite property Id, int
+		public readwrite property FirstName, String
+		public readwrite property LastName, String
+		public readwrite property Department, String
+		public readwrite property HireDate, @Nullable<DateTime>
+		public readwrite property PhoneWork, String
+		public readwrite property PhoneHome, String
+		public readwrite property PhoneCell, String
+		public readwrite property Paid, int
+		public readwrite property PhoneHomeOk, int
+		public readwrite property DateOfBirth, @Nullable<DateTime>
+		public readwrite property HireTime, DateTime
+		public readwrite property Email, String
+		public readwrite property Street, String
+		public readwrite property City, String
+		public readwrite property State, String
+		public readwrite property Zip, int
+
+	endclass
+
+endnamespace

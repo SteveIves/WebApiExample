@@ -1,0 +1,123 @@
+﻿<Window
+    x:Class="TestClientWpf.MainWindow1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:TestClientWpf"
+    Title="Web Service Test Client" Height="700" Width="1200" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <local:EnumMatchToBooleanConverter x:Key="enumConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <local:EmployeesViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="30"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Grid Grid.Row="1" Grid.Column="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="20"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="20"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <RadioButton GroupName="SearchMode" Content="All employees" IsChecked="{Binding SearchMode, Mode=TwoWay, Converter={StaticResource enumConverter},ConverterParameter=All}"/>
+                <RadioButton GroupName="SearchMode" Content="Employees with last name" IsChecked="{Binding SearchMode, Mode=TwoWay, Converter={StaticResource enumConverter},ConverterParameter=LastName}"/>
+                <RadioButton GroupName="SearchMode" Content="Employees in state" IsChecked="{Binding SearchMode, Mode=TwoWay, Converter={StaticResource enumConverter},ConverterParameter=State}"/>
+                <RadioButton GroupName="SearchMode" Content="Employees in zip code" IsChecked="{Binding SearchMode, Mode=TwoWay, Converter={StaticResource enumConverter},ConverterParameter=ZipCode}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <Label Content="Search criteria" />
+                <TextBox Text="{Binding SearchText, Mode=TwoWay}" IsEnabled="{Binding SearchTextEnabled}"  />
+            </StackPanel>
+
+            <StackPanel Grid.Column="4">
+                <Button Height="40" Width="100" Content="Search" Command="{Binding SearchCommand}" />
+                <Label Content="{Binding ResultsMessage}" />
+            </StackPanel>
+
+        </Grid>
+
+        <DataGrid Grid.Row="3" Grid.Column="1" AutoGenerateColumns="False"
+                  ItemsSource="{Binding Employees}" SelectionMode="Single" SelectionUnit="FullRow"
+                  SelectedItem="{Binding SelectedEmployee}"
+                  IsReadOnly="True" GridLinesVisibility="None">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="50" />
+                <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" Width="200" />
+                <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" Width="200" />
+                <DataGridTextColumn Header="State" Binding="{Binding State}" Width="100" />
+                <DataGridTextColumn Header="Zip code" Binding="{Binding Zip}" Width="150" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="5" Grid.Column="1" DataContext="{Binding SelectedEmployee, Mode=TwoWay}" >
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="20"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="20"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <Label Content="First name" />
+                <TextBox Text="{Binding FirstName}" />
+                <Label Content="Last name" Margin="0,5,0,0" />
+                <TextBox Text="{Binding LastName}" />
+                <Label Content="Department" Margin="0,5,0,0" />
+                <TextBox Text="{Binding Department}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <Label Content="Work phone" />
+                <TextBox Text="{Binding PhoneWork}" />
+                <Label Content="Mobile phone" Margin="0,5,0,0" />
+                <TextBox Text="{Binding PhoneCell}" />
+                <Label Content="Home phone" Margin="0,5,0,0" />
+                <TextBox Text="{Binding PhoneHome}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="4">
+                <Label Content="Home address" />
+                <TextBox Text="{Binding Street}" />
+                <Label Content="City" Margin="0,5,0,0" />
+                <TextBox Text="{Binding City}" />
+                <Label Content="State" Margin="0,5,0,0" />
+                <TextBox Text="{Binding State}" />
+                <Label Content="Zip code" Margin="0,5,0,0" />
+                <TextBox Text="{Binding Zip}" />
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+</Window>
