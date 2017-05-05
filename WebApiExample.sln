@@ -19,7 +19,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{341DE7D8-1748-49A6-8B42-89B69FA04C9B}"
 	ProjectSection(SolutionItems) = preProject
+		DATA\department.txt = DATA\department.txt
+		DATA\department.xdl = DATA\department.xdl
+		DATA\employee.txt = DATA\employee.txt
+		DATA\employee.xdl = DATA\employee.xdl
+		LICENSE.md = LICENSE.md
+		load_data.bat = load_data.bat
+		README.md = README.md
 		regen.bat = regen.bat
+		DATA\rps.sch = DATA\rps.sch
+		rps_import.bat = rps_import.bat
+		setup.bat = setup.bat
 	EndProjectSection
 EndProject
 Project("{BBD0F5D1-1CC4-42FD-BA4C-A96779C64378}") = "SelfHost", "SelfHost\SelfHost.synproj", "{2760E410-1394-461A-9905-6401D4D9936A}"
