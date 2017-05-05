@@ -1,5 +1,5 @@
 @echo off
-pushd "%DAT%"
+pushd DATA
 rem Make sure we have a schema
 echo Locating schema file...
 if not exist rps.sch goto no_schema
@@ -27,4 +27,4 @@ goto done
 :load_fail
 echo *ERROR* Schema load failed - repository not changed
 :done
-popds
+popd
