@@ -28,6 +28,6 @@ if not exist "%RPSMFIL%" (
 )
 
 rem if no data files, create and load them
-if not exist %ROOT%DATA\employee.ism" (
+if not exist DATA\employee.ism (
   call load_data.bat"
 )

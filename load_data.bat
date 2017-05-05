@@ -3,14 +3,14 @@ setlocal
 pushd DATA
 
 echo Deleting existing files...
-if exist DEPARTMENT.ISM del /q DEPARTMENT.ISM
-if exist DEPARTMENT.IS1 del /q DEPARTMENT.IS1
-if exist EMPLOYEE.ISM   del /q EMPLOYEE.ISM
-if exist EMPLOYEE.IS1   del /q EMPLOYEE.IS1
+if exist department.ism del /q department.ism
+if exist department.is1 del /q department.is1
+if exist employee.ism   del /q employee.ism
+if exist employee.is1   del /q employee.is1
 
 echo Loading new files...
-fconvert -it DEPARTMENT.TXT -oi DEPARTMENT.ISM -d DEPARTMENT.XDL
-fconvert -it EMPLOYEE.TXT   -oi EMPLOYEE.ISM   -d EMPLOYEE.XDL
+fconvert -it department.txt -oi department.ism -d department.xdl
+fconvert -it employee.txt   -oi employee.ism   -d employee.xdl
 
 popd
 endlocal
